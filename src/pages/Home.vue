@@ -14,7 +14,16 @@ onMounted(() => {
 });
 
 function handleSubmitTask(task: Omit<Task, "id">) {
-    taskStore.addTask(task);
+    if (selectedTask.value) {
+        taskStore.updateTask({
+            ...selectedTask.value,
+            ...task,
+        });
+
+        selectedTask.value = null;
+    } else {
+        taskStore.addTask(task);
+    }
 }
 
 function handleEditTask(task: Task) {
@@ -29,7 +38,7 @@ function handleEditTask(task: Task) {
             Task Management
         </h1>
 
-        <TaskForm :task="selectedTask" @submit="handleSubmitTask" />
+        <TaskForm :task="selectedTask" @submit="handleSubmitTask" @cancel="selectedTask = null" />
 
         <div v-if="taskStore.loading" class="py-8 text-center">
             Loading...

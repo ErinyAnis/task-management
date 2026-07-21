@@ -7,6 +7,7 @@ import { watch } from "vue";
 
 const emit = defineEmits<{
     submit: [task: Omit<Task, "id">];
+    cancel: [];
 }>();
 
 const props = defineProps<{
@@ -95,6 +96,11 @@ const submitForm = handleSubmit((values) => {
 
             <button class="rounded bg-blue-600 px-4 py-2 text-white">
                 {{ task ? "Save Changes" : "Add Task" }}
+            </button>
+
+            <button v-if="task" type="button" @click="emit('cancel')"
+                class="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">
+                Cancel
             </button>
 
         </div>

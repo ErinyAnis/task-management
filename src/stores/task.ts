@@ -30,11 +30,22 @@ export const useTaskStore = defineStore("tasks", () => {
   });
 }
 
+function updateTask(updatedTask: Task) {
+  const index = tasks.value.findIndex(
+    (task) => task.id === updatedTask.id
+  );
+
+  if (index !== -1) {
+    tasks.value[index] = updatedTask;
+  }
+}
+
   return {
     tasks,
     loading,
     error,
     fetchTasks,
     addTask,
+    updateTask,
   };
 });
