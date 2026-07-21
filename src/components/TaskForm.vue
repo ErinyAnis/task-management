@@ -1,20 +1,25 @@
 <script setup lang="ts">
-import { ref } from "vue";
-import type { TaskStatus } from "../types/task";
+import { useForm } from "vee-validate";
+import { toTypedSchema } from "@vee-validate/yup";
+import { taskSchema } from "../validation/taskSchema";
 
-const title = ref("");
-const description = ref("");
-const status = ref<TaskStatus>("Pending");
-const dueDate = ref("");
+const {
+    defineField,
+    errors,
+    handleSubmit,
+} = useForm({
+    validationSchema: toTypedSchema(taskSchema),
+});
 
-function submitForm() {
-    console.log({
-        title: title.value,
-        description: description.value,
-        status: status.value,
-        dueDate: dueDate.value,
-    });
-}
+const [title] = defineField("title");
+const [description] = defineField("description");
+const [status] = defineField("status");
+const [dueDate] = defineField("dueDate");
+
+const submitForm = handleSubmit((values) => {
+    console.log(values);
+});
+
 </script>
 
 <template>
@@ -26,16 +31,28 @@ function submitForm() {
         <div class="space-y-4">
 
             <input v-model="title" type="text" placeholder="Task title" class="w-full rounded border p-3" />
+            <p class="text-sm text-red-500">
+                {{ errors.title }}
+            </p>
 
             <textarea v-model="description" placeholder="Task description" class="w-full rounded border p-3" />
+            <p class="text-sm text-red-500">
+                {{ errors.description }}
+            </p>
 
             <select v-model="status" class="w-full rounded border p-3">
                 <option>Pending</option>
                 <option>In Progress</option>
                 <option>Done</option>
             </select>
+            <p class="text-sm text-red-500">
+                {{ errors.status }}
+            </p>
 
             <input v-model="dueDate" type="date" class="w-full rounded border p-3" />
+            <p class="text-sm text-red-500">
+                {{ errors.dueDate }}
+            </p>
 
             <button class="rounded bg-blue-600 px-4 py-2 text-white">
                 Add Task

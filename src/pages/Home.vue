@@ -3,6 +3,7 @@ import { onMounted } from "vue";
 import { useTaskStore } from "../stores/task";
 
 import TaskList from "../components/TaskList.vue";
+import TaskForm from "../components/TaskForm.vue";
 
 const taskStore = useTaskStore();
 
