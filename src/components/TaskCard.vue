@@ -6,6 +6,11 @@ const props = defineProps<{
     task: Task;
 }>();
 
+const emit = defineEmits<{
+    edit: [task: Task];
+    delete: [task: Task];
+}>();
+
 const statusClass = computed(() => {
     switch (props.task.status) {
         case "Pending":
@@ -56,11 +61,13 @@ const formattedDate = computed(() => {
         </p>
         <div class="mt-5 flex justify-end gap-3">
 
-            <button class="rounded bg-blue-500 px-3 py-2 text-sm text-white transition hover:bg-blue-600">
+            <button @click="emit('edit', task)"
+                class="rounded bg-blue-500 px-3 py-2 text-sm text-white transition hover:bg-blue-600">
                 Edit
             </button>
 
-            <button class="rounded bg-red-500 px-3 py-2 text-sm text-white transition hover:bg-red-600">
+            <button @click="emit('delete', task)"
+                class="rounded bg-red-500 px-3 py-2 text-sm text-white transition hover:bg-red-600">
                 Delete
             </button>
 

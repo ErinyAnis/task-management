@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useTaskStore } from "../stores/task";
 import type { Task } from "../types/task";
 
@@ -7,6 +7,7 @@ import TaskList from "../components/TaskList.vue";
 import TaskForm from "../components/TaskForm.vue";
 
 const taskStore = useTaskStore();
+const selectedTask = ref<Task | null>(null);
 
 onMounted(() => {
     taskStore.fetchTasks();
@@ -14,6 +15,11 @@ onMounted(() => {
 
 function handleAddTask(task: Omit<Task, "id">) {
     taskStore.addTask(task);
+}
+
+function handleEditTask(task: Task) {
+    selectedTask.value = task;
+    console.log(task);
 }
 </script>
 
@@ -23,7 +29,7 @@ function handleAddTask(task: Omit<Task, "id">) {
             Task Management
         </h1>
 
-        <TaskForm @submit="handleAddTask" />
+        <TaskForm :task="selectedTask" @submit="handleAddTask" />
 
         <div v-if="taskStore.loading" class="py-8 text-center">
             Loading...
@@ -33,6 +39,6 @@ function handleAddTask(task: Omit<Task, "id">) {
             {{ taskStore.error }}
         </div>
 
-        <TaskList v-else :tasks="taskStore.tasks" />
+        <TaskList v-else :tasks="taskStore.tasks" @edit="handleEditTask" />
     </div>
 </template>

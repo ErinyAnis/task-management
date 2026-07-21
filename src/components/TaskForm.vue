@@ -8,6 +8,10 @@ const emit = defineEmits<{
     submit: [task: Omit<Task, "id">];
 }>();
 
+const props = defineProps<{
+    task?: Task | null;
+}>();
+
 const {
     defineField,
     errors,
