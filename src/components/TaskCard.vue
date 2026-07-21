@@ -47,7 +47,7 @@ const formattedDate = computed(() => {
         </div>
 
         <p class="mt-3 text-gray-600">
-            {{ task.description }}
+            {{ task.description || "No description provided." }}
         </p>
 
         <p class="mt-4 text-sm text-gray-500">

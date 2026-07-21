@@ -2,11 +2,17 @@
 import { useForm } from "vee-validate";
 import { toTypedSchema } from "@vee-validate/yup";
 import { taskSchema } from "../validation/taskSchema";
+import type { Task } from "../types/task";
+
+const emit = defineEmits<{
+    submit: [task: Omit<Task, "id">];
+}>();
 
 const {
     defineField,
     errors,
     handleSubmit,
+    resetForm,
 } = useForm({
     validationSchema: toTypedSchema(taskSchema),
 });
@@ -17,7 +23,13 @@ const [status] = defineField("status");
 const [dueDate] = defineField("dueDate");
 
 const submitForm = handleSubmit((values) => {
-    console.log(values);
+    emit("submit", {
+        ...values,
+        description: values.description ?? "",
+        status: values.status ?? "Pending",
+    });
+
+    resetForm();
 });
 
 </script>
@@ -41,9 +53,10 @@ const submitForm = handleSubmit((values) => {
             </p>
 
             <select v-model="status" class="w-full rounded border p-3">
-                <option>Pending</option>
-                <option>In Progress</option>
-                <option>Done</option>
+                <option value="">Select status (optional)</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Done">Done</option>
             </select>
             <p class="text-sm text-red-500">
                 {{ errors.status }}

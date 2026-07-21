@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from "vue";
 import { useTaskStore } from "../stores/task";
+import type { Task } from "../types/task";
 
 import TaskList from "../components/TaskList.vue";
 import TaskForm from "../components/TaskForm.vue";
@@ -10,6 +11,10 @@ const taskStore = useTaskStore();
 onMounted(() => {
     taskStore.fetchTasks();
 });
+
+function handleAddTask(task: Omit<Task, "id">) {
+    taskStore.addTask(task);
+}
 </script>
 
 <template>
@@ -18,7 +23,7 @@ onMounted(() => {
             Task Management
         </h1>
 
-        <TaskForm />
+        <TaskForm @submit="handleAddTask" />
 
         <div v-if="taskStore.loading" class="py-8 text-center">
             Loading...

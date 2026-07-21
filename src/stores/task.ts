@@ -23,10 +23,18 @@ export const useTaskStore = defineStore("tasks", () => {
     }
   }
 
+  function addTask(task: Omit<Task, "id">) {
+  tasks.value.unshift({
+    id: Date.now(),
+    ...task,
+  });
+}
+
   return {
     tasks,
     loading,
     error,
     fetchTasks,
+    addTask,
   };
 });

@@ -15,11 +15,23 @@ export const taskSchema = yup.object({
     .trim(),
 
   status: yup
-    .string()
-    .required(),
+  .mixed<"Pending" | "In Progress" | "Done">()
+  .oneOf(["Pending", "In Progress", "Done"])
+  .optional(),
 
   dueDate: yup
-    .date()
-    .required("Due date is required")
-    .min(tomorrow, "Due date must be in the future")
+  .string()
+  .required("Due date is required")
+  .test(
+    "future-date",
+    "Due date must be in the future",
+    (value) => {
+      if (!value) return false;
+
+      const selectedDate = new Date(value);
+      selectedDate.setHours(0, 0, 0, 0);
+
+      return selectedDate >= tomorrow;
+    }
+  ),
 });
