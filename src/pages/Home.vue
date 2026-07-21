@@ -13,16 +13,18 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="container mx-auto p-6">
-        <h1 class="mb-6 text-3xl font-bold">
+    <div class="container mx-auto max-w-5xl p-6">
+        <h1 class="mb-8 text-center text-3xl font-bold">
             Task Management
         </h1>
 
-        <div v-if="taskStore.loading">
+        <TaskForm />
+
+        <div v-if="taskStore.loading" class="py-8 text-center">
             Loading...
         </div>
 
-        <div v-else-if="taskStore.error" class="text-red-500">
+        <div v-else-if="taskStore.error" class="py-8 text-center text-red-500">
             {{ taskStore.error }}
         </div>
 
