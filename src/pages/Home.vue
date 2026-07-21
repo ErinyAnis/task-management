@@ -2,6 +2,8 @@
 import { onMounted } from "vue";
 import { useTaskStore } from "../stores/task";
 
+import TaskList from "../components/TaskList.vue";
+
 const taskStore = useTaskStore();
 
 onMounted(() => {
@@ -19,12 +21,10 @@ onMounted(() => {
             Loading...
         </div>
 
-        <div v-else-if="taskStore.error">
+        <div v-else-if="taskStore.error" class="text-red-500">
             {{ taskStore.error }}
         </div>
 
-        <div v-else>
-            {{ taskStore.tasks }}
-        </div>
+        <TaskList v-else :tasks="taskStore.tasks" />
     </div>
 </template>
