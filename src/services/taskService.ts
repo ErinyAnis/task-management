@@ -20,7 +20,7 @@ export const taskService = {
     return task;
   },
 
-  async deleteTask(id: number): Promise<void> {
+  async deleteTask(_id: number): Promise<void> {
     await delay(500);
   },
 };

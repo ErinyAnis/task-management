@@ -71,12 +71,11 @@ const formattedDate = computed(() => {
                 Delete
             </button>
 
+            <RouterLink :to="`/tasks/${task.id}`"
+                class="rounded bg-gray-700 px-3 py-2 text-sm text-white transition hover:bg-gray-800">
+                View Details
+            </RouterLink>
         </div>
-
-        <RouterLink :to="`/tasks/${task.id}`"
-            class="rounded bg-gray-700 px-3 py-2 text-sm text-white hover:bg-gray-800">
-            View Details
-        </RouterLink>
     </div>
 
 </template>
