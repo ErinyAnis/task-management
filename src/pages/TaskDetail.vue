@@ -2,6 +2,11 @@
 import { computed, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useTaskStore } from "../stores/task";
+import {
+    ArrowLeft,
+    CalendarDays,
+    ClipboardList,
+} from "lucide-vue-next";
 
 const route = useRoute();
 const router = useRouter();
@@ -78,8 +83,8 @@ async function handleDelete() {
 <template>
     <div class="container mx-auto max-w-5xl p-6">
         <button @click="router.back()"
-            class="mb-6 flex items-center gap-2 rounded-lg border px-4 py-2 text-gray-700 transition hover:bg-gray-100">
-            ← Back
+            class="mb-6 flex items-center gap-2 rounded-lg border px-4 py-2 text-gray-700 transition hover:bg-gray-200 cursor-pointer">
+            <ArrowLeft class="h-4 w-4" /> Back
         </button>
 
         <div v-if="taskStore.loading" class="flex justify-center py-16">
@@ -142,9 +147,10 @@ async function handleDelete() {
                 </div>
 
                 <div>
-                    <h2 class="mb-2 font-semibold text-gray-700">
-                        Due Date
-                    </h2>
+                    <div class="mb-2 font-semibold text-gray-700 flex items-center gap-2">
+                        <CalendarDays class="h-4 w-4" />
+                        <h2>Due Date</h2>
+                    </div>
 
                     <p :class="isOverdue ? 'font-medium text-red-500' : 'text-gray-600'">
                         {{ formattedDate }}

@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import {
+    Search,
+    X,
+} from "lucide-vue-next";
 
 const search = defineModel<string>("search", {
     default: "",
@@ -29,7 +33,9 @@ function clearFilters() {
 
             <!-- Search -->
             <div>
-                <label for="search" class="mb-2 block text-sm font-medium text-gray-700">
+                <label class="mb-2 flex items-center gap-2 text-sm font-medium text-gray-700">
+                    <Search class="h-4 w-4" />
+
                     Search
                 </label>
 
@@ -38,8 +44,8 @@ function clearFilters() {
                         class="w-full rounded-lg border border-gray-300 p-3 pr-10 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200" />
 
                     <button v-if="search" type="button" @click="search = ''"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-gray-700">
-                        ✕
+                        class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 transition hover:text-gray-700 cursor-pointer">
+                        <X class="h-4 w-4" />
                     </button>
                 </div>
             </div>

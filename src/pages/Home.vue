@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from "vue";
 import { useTaskStore } from "../stores/task";
 import type { Task } from "../types/task";
+import { ClipboardList } from "lucide-vue-next";
 
 import TaskForm from "../components/TaskForm.vue";
 import TaskFilters from "../components/TaskFilters.vue";
@@ -72,9 +73,13 @@ const filteredTasks = computed(() =>
 <template>
     <div class="container mx-auto max-w-5xl p-6">
         <header class="mb-10 text-center">
-            <h1 class="text-4xl font-bold text-gray-900">
-                📝 Task Management
-            </h1>
+            <div class="flex items-center justify-center gap-3">
+                <ClipboardList class="h-9 w-9 text-blue-600" />
+
+                <h1 class="text-4xl font-bold text-gray-900">
+                    Task Management
+                </h1>
+            </div>
 
             <p class="mt-2 text-gray-500">
                 Organize, track and manage your daily tasks.

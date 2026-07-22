@@ -2,6 +2,12 @@
 import { computed } from "vue";
 import { RouterLink } from "vue-router";
 import type { Task } from "../types/task";
+import {
+    CalendarDays,
+    FileText,
+    Pencil,
+    Trash2,
+} from "lucide-vue-next";
 
 const props = defineProps<{
     task: Task;
@@ -68,8 +74,10 @@ const isOverdue = computed(() => {
         </p>
 
         <div class="mt-5 rounded-lg bg-gray-50 p-3">
-            <p class="text-sm text-gray-500">
-                📅 Due Date
+            <p class="flex items-center gap-2 text-sm text-gray-500">
+                <CalendarDays class="h-4 w-4" />
+
+                Due Date
             </p>
 
             <div class="mt-1 flex items-center justify-between">
@@ -85,19 +93,24 @@ const isOverdue = computed(() => {
 
         <div class="mt-6 flex flex-wrap justify-end gap-2">
             <RouterLink :to="`/tasks/${task.id}`"
-                class="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800">
+                class="flex items-center gap-2 rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800">
+                <FileText class="h-4 w-4" />
                 View Details
             </RouterLink>
 
             <button
-                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
+                class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
                 @click="emit('edit', task)">
+                <Pencil class="h-4 w-4" />
+
                 Edit
             </button>
 
             <button
-                class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 cursor-pointer"
+                class="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
                 @click="emit('delete', task)">
+                <Trash2 class="h-4 w-4" />
+
                 Delete
             </button>
         </div>
