@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { computed, ref, onMounted } from "vue";
 import { useTaskStore } from "../stores/task";
 import type { Task } from "../types/task";
 
 import TaskList from "../components/TaskList.vue";
 import TaskForm from "../components/TaskForm.vue";
+import TaskFilters from "../components/TaskFilters.vue";
 
 const taskStore = useTaskStore();
 const selectedTask = ref<Task | null>(null);
+const search = ref("");
+const status = ref("");
 
 onMounted(() => {
     taskStore.fetchTasks();
@@ -28,7 +31,6 @@ function handleSubmitTask(task: Omit<Task, "id">) {
 
 function handleEditTask(task: Task) {
     selectedTask.value = task;
-    console.log(task);
 }
 
 function handleDeleteTask(task: Task) {
@@ -44,6 +46,21 @@ function handleDeleteTask(task: Task) {
         selectedTask.value = null;
     }
 }
+
+const filteredTasks = computed(() => {
+    return taskStore.tasks.filter((task) => {
+        const matchesSearch =
+            task.title
+                .toLowerCase()
+                .includes(search.value.trim().toLowerCase());
+
+        const matchesStatus =
+            !status.value ||
+            task.status === status.value;
+
+        return matchesSearch && matchesStatus;
+    });
+});
 </script>
 
 <template>
@@ -52,7 +69,11 @@ function handleDeleteTask(task: Task) {
             Task Management
         </h1>
 
+
+
         <TaskForm :task="selectedTask" @submit="handleSubmitTask" @cancel="selectedTask = null" />
+
+        <TaskFilters v-model:search="search" v-model:status="status" />
 
         <div v-if="taskStore.loading" class="py-8 text-center">
             Loading...
@@ -62,6 +83,11 @@ function handleDeleteTask(task: Task) {
             {{ taskStore.error }}
         </div>
 
-        <TaskList v-else :tasks="taskStore.tasks" @edit="handleEditTask" @delete="handleDeleteTask" />
+        <div v-else-if="filteredTasks.length === 0"
+            class="rounded-lg border border-dashed p-8 text-center text-gray-500">
+            No tasks found.
+        </div>
+
+        <TaskList v-else :tasks="filteredTasks" @edit="handleEditTask" @delete="handleDeleteTask" />
     </div>
 </template>
