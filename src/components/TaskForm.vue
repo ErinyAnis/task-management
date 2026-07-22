@@ -159,7 +159,7 @@ const submitForm = handleSubmit((values) => {
 
             <div class="flex flex-wrap gap-3 pt-2">
                 <button :disabled="taskStore.actionLoading"
-                    class="rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50">
+                    class="rounded-lg bg-blue-600 px-5 py-2.5 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer">
                     {{
                         taskStore.actionLoading
                             ? "Saving..."
@@ -170,7 +170,7 @@ const submitForm = handleSubmit((values) => {
                 </button>
 
                 <button v-if="task" type="button" @click="emit('cancel')"
-                    class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 font-medium text-gray-700 transition hover:bg-gray-100">
+                    class="rounded-lg border border-gray-300 bg-white px-5 py-2.5 font-medium text-gray-700 transition hover:bg-gray-100 cursor-pointer">
                     Cancel
                 </button>
             </div>

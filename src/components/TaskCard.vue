@@ -99,7 +99,7 @@ const isOverdue = computed(() => {
             </RouterLink>
 
             <button
-                class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700"
+                class="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
                 @click="emit('edit', task)">
                 <Pencil class="h-4 w-4" />
 
@@ -107,7 +107,7 @@ const isOverdue = computed(() => {
             </button>
 
             <button
-                class="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                class="flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 cursor-pointer"
                 @click="emit('delete', task)">
                 <Trash2 class="h-4 w-4" />
 

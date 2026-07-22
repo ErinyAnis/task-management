@@ -5,7 +5,6 @@ import { useTaskStore } from "../stores/task";
 import {
     ArrowLeft,
     CalendarDays,
-    ClipboardList,
 } from "lucide-vue-next";
 
 const route = useRoute();
