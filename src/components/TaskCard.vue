@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from "vue";
+import { RouterLink } from "vue-router";
 import type { Task } from "../types/task";
 
 const props = defineProps<{
@@ -34,48 +35,71 @@ const formattedDate = computed(() => {
         year: "numeric",
     });
 });
+
+const isOverdue = computed(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const dueDate = new Date(props.task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    return dueDate < today && props.task.status !== "Done";
+});
 </script>
 
 <template>
-    <div class="rounded-lg border border-gray-200 bg-white p-5 shadow-sm transition hover:shadow-md">
-        <div class="flex items-start justify-between">
-            <h2 class="text-lg font-semibold">
+    <article
+        class="rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div class="flex items-start justify-between gap-4">
+            <h2 class="text-xl font-semibold text-gray-900">
                 {{ task.title }}
             </h2>
 
             <span :class="[
-                'rounded-full px-3 py-1 text-sm font-medium',
-                statusClass
+                statusClass,
+                'shrink-0 rounded-full px-3 py-1 text-xs font-semibold',
             ]">
                 {{ task.status }}
             </span>
         </div>
 
-        <p class="mt-3 text-gray-600">
+        <p class="mt-4 min-h-12 text-sm leading-6 text-gray-600">
             {{ task.description || "No description provided." }}
         </p>
 
-        <p class="mt-4 text-sm text-gray-500">
-            Due:
-            {{ formattedDate }}
-        </p>
-        <div class="mt-5 flex justify-end gap-3">
+        <div class="mt-5 rounded-lg bg-gray-50 p-3">
+            <p class="text-sm text-gray-500">
+                📅 Due Date
+            </p>
 
-            <button @click="emit('edit', task)"
-                class="rounded bg-blue-500 px-3 py-2 text-sm text-white transition hover:bg-blue-600">
+            <div class="mt-1 flex items-center justify-between">
+                <span class="font-medium text-gray-700">
+                    {{ formattedDate }}
+                </span>
+
+                <span v-if="isOverdue" class="rounded-full bg-red-100 px-2 py-1 text-xs font-semibold text-red-700">
+                    Overdue
+                </span>
+            </div>
+        </div>
+
+        <div class="mt-6 flex flex-wrap justify-end gap-2">
+            <RouterLink :to="`/tasks/${task.id}`"
+                class="rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-gray-800">
+                View Details
+            </RouterLink>
+
+            <button
+                class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-blue-700 cursor-pointer"
+                @click="emit('edit', task)">
                 Edit
             </button>
 
-            <button @click="emit('delete', task)"
-                class="rounded bg-red-500 px-3 py-2 text-sm text-white transition hover:bg-red-600">
+            <button
+                class="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700 cursor-pointer"
+                @click="emit('delete', task)">
                 Delete
             </button>
-
-            <RouterLink :to="`/tasks/${task.id}`"
-                class="rounded bg-gray-700 px-3 py-2 text-sm text-white transition hover:bg-gray-800">
-                View Details
-            </RouterLink>
         </div>
-    </div>
-
+    </article>
 </template>
