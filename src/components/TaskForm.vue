@@ -4,7 +4,9 @@ import { toTypedSchema } from "@vee-validate/yup";
 import { taskSchema } from "../validation/taskSchema";
 import type { Task } from "../types/task";
 import { watch } from "vue";
+import { useTaskStore } from "../stores/task";
 
+const taskStore = useTaskStore();
 const emit = defineEmits<{
     submit: [task: Omit<Task, "id">];
     cancel: [];
@@ -95,8 +97,9 @@ const submitForm = handleSubmit((values) => {
             </p>
 
             <div class="mt-4 flex gap-3">
-                <button class="rounded bg-blue-600 px-4 py-2 text-white">
-                    {{ task ? "Save Changes" : "Add Task" }}
+                <button :disabled="taskStore.actionLoading"
+                    class="rounded bg-blue-600 px-4 py-2 text-white disabled:opacity-50">
+                    {{ taskStore.actionLoading ? "Saving..." : (task ? "Save Changes" : "Add Task") }}
                 </button>
 
                 <button v-if="task" type="button" @click="emit('cancel')"

@@ -16,35 +16,25 @@ onMounted(() => {
     taskStore.fetchTasks();
 });
 
-function handleSubmitTask(task: Omit<Task, "id">) {
+async function handleSubmitTask(task: Omit<Task, "id">) {
     if (selectedTask.value) {
-        taskStore.updateTask({
-            ...selectedTask.value,
-            ...task,
-        });
-
+        await taskStore.updateTask({ ...selectedTask.value, ...task });
         selectedTask.value = null;
     } else {
-        taskStore.addTask(task);
+        await taskStore.addTask(task);
     }
+}
+
+async function handleDeleteTask(task: Task) {
+    const confirmed = window.confirm(`Are you sure you want to delete "${task.title}"?`);
+    if (!confirmed) return;
+
+    await taskStore.deleteTask(task.id);
+    if (selectedTask.value?.id === task.id) selectedTask.value = null;
 }
 
 function handleEditTask(task: Task) {
     selectedTask.value = task;
-}
-
-function handleDeleteTask(task: Task) {
-    const confirmed = window.confirm(
-        `Are you sure you want to delete "${task.title}"?`
-    );
-
-    if (!confirmed) return;
-
-    taskStore.deleteTask(task.id);
-
-    if (selectedTask.value?.id === task.id) {
-        selectedTask.value = null;
-    }
 }
 
 const filteredTasks = computed(() => {
@@ -69,14 +59,20 @@ const filteredTasks = computed(() => {
             Task Management
         </h1>
 
-
-
         <TaskForm :task="selectedTask" @submit="handleSubmitTask" @cancel="selectedTask = null" />
+
+        <p v-if="taskStore.actionError" class="mb-4 text-center text-sm text-red-500">
+            {{ taskStore.actionError }}
+        </p>
 
         <TaskFilters v-model:search="search" v-model:status="status" />
 
-        <div v-if="taskStore.loading" class="py-8 text-center">
-            Loading...
+        <div class="mb-6 text-center text-gray-500">
+            {{ filteredTasks.length }} task{{ filteredTasks.length !== 1 ? "s" : "" }}
+        </div>
+
+        <div v-if="taskStore.loading" class="flex justify-center py-16">
+            <div class="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
         </div>
 
         <div v-else-if="taskStore.error" class="py-8 text-center text-red-500">
@@ -84,8 +80,14 @@ const filteredTasks = computed(() => {
         </div>
 
         <div v-else-if="filteredTasks.length === 0"
-            class="rounded-lg border border-dashed p-8 text-center text-gray-500">
-            No tasks found.
+            class="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-10 text-center">
+            <h3 class="text-lg font-semibold text-gray-700">
+                No tasks found
+            </h3>
+
+            <p class="mt-2 text-gray-500">
+                Try changing your search or filter, or create a new task.
+            </p>
         </div>
 
         <TaskList v-else :tasks="filteredTasks" @edit="handleEditTask" @delete="handleDeleteTask" />
