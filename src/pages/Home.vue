@@ -1,16 +1,18 @@
 <script setup lang="ts">
-import { computed, ref, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useTaskStore } from "../stores/task";
 import type { Task } from "../types/task";
 
-import TaskList from "../components/TaskList.vue";
 import TaskForm from "../components/TaskForm.vue";
 import TaskFilters from "../components/TaskFilters.vue";
+import TaskList from "../components/TaskList.vue";
 
 const taskStore = useTaskStore();
+
 const selectedTask = ref<Task | null>(null);
-const search = ref("");
-const status = ref("");
+
+const searchQuery = ref("");
+const selectedStatus = ref("");
 
 onMounted(() => {
     taskStore.fetchTasks();
@@ -18,7 +20,11 @@ onMounted(() => {
 
 async function handleSubmitTask(task: Omit<Task, "id">) {
     if (selectedTask.value) {
-        await taskStore.updateTask({ ...selectedTask.value, ...task });
+        await taskStore.updateTask({
+            ...selectedTask.value,
+            ...task,
+        });
+
         selectedTask.value = null;
     } else {
         await taskStore.addTask(task);
@@ -26,60 +32,95 @@ async function handleSubmitTask(task: Omit<Task, "id">) {
 }
 
 async function handleDeleteTask(task: Task) {
-    const confirmed = window.confirm(`Are you sure you want to delete "${task.title}"?`);
+    const confirmed = window.confirm(
+        `Are you sure you want to delete "${task.title}"?`
+    );
+
     if (!confirmed) return;
 
     await taskStore.deleteTask(task.id);
-    if (selectedTask.value?.id === task.id) selectedTask.value = null;
+
+    if (selectedTask.value?.id === task.id) {
+        selectedTask.value = null;
+    }
 }
 
 function handleEditTask(task: Task) {
     selectedTask.value = task;
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+    });
 }
 
-const filteredTasks = computed(() => {
-    return taskStore.tasks.filter((task) => {
-        const matchesSearch =
-            task.title
-                .toLowerCase()
-                .includes(search.value.trim().toLowerCase());
+const filteredTasks = computed(() =>
+    taskStore.tasks.filter((task) => {
+        const matchesSearch = task.title
+            .toLowerCase()
+            .includes(searchQuery.value.trim().toLowerCase());
 
         const matchesStatus =
-            !status.value ||
-            task.status === status.value;
+            !selectedStatus.value ||
+            task.status === selectedStatus.value;
 
         return matchesSearch && matchesStatus;
-    });
-});
+    })
+);
 </script>
 
 <template>
     <div class="container mx-auto max-w-5xl p-6">
-        <h1 class="mb-8 text-center text-3xl font-bold">
-            Task Management
-        </h1>
+        <header class="mb-10 text-center">
+            <h1 class="text-4xl font-bold text-gray-900">
+                📝 Task Management
+            </h1>
 
-        <TaskForm :task="selectedTask" @submit="handleSubmitTask" @cancel="selectedTask = null" />
+            <p class="mt-2 text-gray-500">
+                Organize, track and manage your daily tasks.
+            </p>
+        </header>
 
-        <p v-if="taskStore.actionError" class="mb-4 text-center text-sm text-red-500">
+        <div class="mb-8">
+            <TaskForm :task="selectedTask" @submit="handleSubmitTask" @cancel="selectedTask = null" />
+        </div>
+
+        <p v-if="taskStore.actionError"
+            class="mb-6 rounded-lg border border-red-200 bg-red-50 p-3 text-center text-sm text-red-600">
             {{ taskStore.actionError }}
         </p>
 
-        <TaskFilters v-model:search="search" v-model:status="status" />
-
-        <div class="mb-6 text-center text-gray-500">
-            {{ filteredTasks.length }} task{{ filteredTasks.length !== 1 ? "s" : "" }}
+        <div class="mb-8">
+            <TaskFilters v-model:search="searchQuery" v-model:status="selectedStatus" />
         </div>
 
-        <div v-if="taskStore.loading" class="flex justify-center py-16">
+        <p class="mb-6 text-center text-sm text-gray-500">
+            Showing
+            <span class="font-semibold">
+                {{ filteredTasks.length }}
+            </span>
+            of
+            <span class="font-semibold">
+                {{ taskStore.tasks.length }}
+            </span>
+            tasks
+        </p>
+
+        <div v-if="taskStore.loading" class="flex flex-col items-center py-16">
             <div class="h-10 w-10 animate-spin rounded-full border-4 border-blue-600 border-t-transparent"></div>
+
+            <p class="mt-4 text-gray-500">
+                Loading tasks...
+            </p>
         </div>
 
-        <div v-else-if="taskStore.error" class="py-8 text-center text-red-500">
-            {{ taskStore.error }}
+        <div v-else-if="taskStore.error" class="rounded-xl border border-red-200 bg-red-50 p-6 text-center">
+            <p class="font-medium text-red-700">
+                {{ taskStore.error }}
+            </p>
         </div>
 
-        <div v-else-if="filteredTasks.length === 0"
+        <div v-else-if="!filteredTasks.length"
             class="rounded-xl border-2 border-dashed border-gray-300 bg-gray-50 p-10 text-center">
             <h3 class="text-lg font-semibold text-gray-700">
                 No tasks found
