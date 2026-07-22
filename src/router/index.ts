@@ -9,6 +9,10 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: Home,
+    }, {
+      path: "/tasks/:id",
+      name: "task-details",
+      component: () => import("../pages/TaskDetail.vue"),
     },
   ],
 });

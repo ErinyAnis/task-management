@@ -66,8 +66,12 @@ export const useTaskStore = defineStore("tasks", () => {
     }
   }
 
+  function getTaskById(id: number) {
+  return tasks.value.find((task) => task.id === id);
+}
+
   return {
     tasks, loading, error, actionLoading, actionError,
-    fetchTasks, addTask, updateTask, deleteTask,
+    fetchTasks, addTask, updateTask, deleteTask,getTaskById
   };
 });
