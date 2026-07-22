@@ -94,14 +94,18 @@ const submitForm = handleSubmit((values) => {
                 {{ errors.dueDate }}
             </p>
 
-            <button class="rounded bg-blue-600 px-4 py-2 text-white">
-                {{ task ? "Save Changes" : "Add Task" }}
-            </button>
+            <div class="mt-4 flex gap-3">
+                <button class="rounded bg-blue-600 px-4 py-2 text-white">
+                    {{ task ? "Save Changes" : "Add Task" }}
+                </button>
 
-            <button v-if="task" type="button" @click="emit('cancel')"
-                class="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">
-                Cancel
-            </button>
+                <button v-if="task" type="button" @click="emit('cancel')"
+                    class="rounded bg-gray-500 px-4 py-2 text-white hover:bg-gray-600">
+                    Cancel
+                </button>
+            </div>
+
+
 
         </div>
     </form>

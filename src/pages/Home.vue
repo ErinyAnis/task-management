@@ -30,6 +30,20 @@ function handleEditTask(task: Task) {
     selectedTask.value = task;
     console.log(task);
 }
+
+function handleDeleteTask(task: Task) {
+    const confirmed = window.confirm(
+        `Are you sure you want to delete "${task.title}"?`
+    );
+
+    if (!confirmed) return;
+
+    taskStore.deleteTask(task.id);
+
+    if (selectedTask.value?.id === task.id) {
+        selectedTask.value = null;
+    }
+}
 </script>
 
 <template>
@@ -48,6 +62,6 @@ function handleEditTask(task: Task) {
             {{ taskStore.error }}
         </div>
 
-        <TaskList v-else :tasks="taskStore.tasks" @edit="handleEditTask" />
+        <TaskList v-else :tasks="taskStore.tasks" @edit="handleEditTask" @delete="handleDeleteTask" />
     </div>
 </template>

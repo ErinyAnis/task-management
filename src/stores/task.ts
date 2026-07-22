@@ -40,6 +40,10 @@ function updateTask(updatedTask: Task) {
   }
 }
 
+function deleteTask(taskId: number) {
+  tasks.value = tasks.value.filter((task) => task.id !== taskId);
+}
+
   return {
     tasks,
     loading,
@@ -47,5 +51,6 @@ function updateTask(updatedTask: Task) {
     fetchTasks,
     addTask,
     updateTask,
+    deleteTask,
   };
 });
